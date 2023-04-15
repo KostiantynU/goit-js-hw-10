@@ -52,15 +52,16 @@ function searchByWord(event) {
 }
 
 function createMarkupList(array) {
-  return (listCountries = array
+  const listCountries = array
     .map(el => {
       return `<li><img width="50" height=30" src="${el.flags.svg}">${el.name.official}</li>`;
     })
-    .join(''));
+    .join('');
+  return listCountries;
 }
 
 function createMarkupCard(array) {
-  return (markupCard = array
+  const markupCard = array
     .map(({ flags, name, capital, population, languages }) => {
       return `<img width="50" height=30" src="${flags.svg}"><h2>${
         name.official
@@ -70,7 +71,8 @@ function createMarkupCard(array) {
         languages
       )}</p></p>`;
     })
-    .join(''));
+    .join('');
+  return markupCard;
 }
 
 function renderList(markup) {
