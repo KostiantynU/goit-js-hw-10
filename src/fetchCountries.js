@@ -4,8 +4,16 @@ export function fetchCountries(country, { official, capital, population, flags, 
   return fetch(
     `${BASIC_URL}${country}?fields=${official},${capital},${population},${flags},${languages}`
   )
-    .then(response => response.json())
-    .then(data => data)
+    .then(response => {
+      if (!response.ok) {
+        return [];
+      }
+
+      return response.json();
+    })
+    .then(data => {
+      return data;
+    })
     .catch(error => {
       console.log(error);
     });

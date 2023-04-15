@@ -28,26 +28,27 @@ refs.searchBoxEl.addEventListener('input', debounce(searchByWord, DEBOUNCE_DELAY
 function searchByWord(event) {
   if (!event.target.value.trim()) {
     Notiflix.Notify.info('The field is empty.', refs.notiflixOpt);
-    refs.countryInfoEl.innerHTML = '';
+    clearAllFields();
     return;
   }
   const countriesPromise = fetchCountries(event.target.value.trim(), refs.optionsObj);
-  countriesPromise
-    .then(array => {
-      if (array.length > 10) {
-        Notiflix.Notify.info(
-          'Too many matches found. Please enter a more specific name.',
-          refs.notiflixOpt
-        );
-        refs.searchBoxEl.value = '';
-        console.log(refs.searchBoxEl);
-      } else if (array.length < 10 && array.length > 2) {
-        renderList(createMarkupList(array));
-      } else if (array.length === 1) {
-        renderCard(createMarkupCard(array));
-      }
-    })
-    .catch(onError);
+
+  countriesPromise.then(array => {
+    if (array.length > 10) {
+      clearAllFields();
+      Notiflix.Notify.info(
+        'Too many matches found. Please enter a more specific name.',
+        refs.notiflixOpt
+      );
+    } else if (array.length <= 10 && array.length >= 2) {
+      renderList(createMarkupList(array));
+    } else if (array.length === 1) {
+      renderCard(createMarkupCard(array));
+    } else if (array.length === 0) {
+      Notiflix.Notify.failure('Oops, there is no country with that name', refs.notiflixOpt);
+      clearAllFields();
+    }
+  });
 }
 
 function createMarkupList(array) {
@@ -82,6 +83,8 @@ function renderCard(markup) {
   refs.countryInfoEl.innerHTML = markup;
 }
 
-function onError(error) {
-  console.log(error);
+function clearAllFields() {
+  refs.countryInfoEl.innerHTML = '';
+  refs.countryListEl.innerHTML = '';
+  refs.searchBoxEl.value = '';
 }
